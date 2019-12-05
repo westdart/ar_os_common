@@ -1,0 +1,17 @@
+---
+galaxy_info:
+  author: David Stewart <dstewart@redhat.com>
+  description: Place for common templates
+  company: RedHat Ltd.
+  license: license (BSD, MIT)
+  min_ansible_version: 1.2
+  galaxy_tags: []
+  platforms:
+    - name: EL
+      versions:
+        - all
+    - name: Fedora
+      versions:
+        - all
+
+dependencies: []

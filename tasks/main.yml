@@ -1,0 +1,7 @@
+---
+- name: Copy templates to desired location
+  copy:
+    src: "{{ item }}"
+    dest: "{{ ar_osc_common_templates_dest }}/{{ item | basename }}"
+  with_fileglob:
+    - "{{ role_path }}/files/*"
