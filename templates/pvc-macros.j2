@@ -1,0 +1,28 @@
+{% macro pvc_definition(_pvc, pvc, indent) -%}
+{% set spacefmt = "%-" + indent + "s" %}
+{% set space = spacefmt | format("",)%}
+{{ space }}- apiVersion: v1
+{{ space }}  kind: PersistentVolumeClaim
+{{ space }}  metadata:
+{{ space }}    name: {{ _pvc.name | default(pvc.name) }}
+{{ space }}  spec:
+{%         if 'storageClass' in _pvc or 'storageClass' in pvc %}
+{{ space }}    storageClassName: {{ _pvc.storageClass | default(pvc.accessModes) }}
+{%         endif %}
+{{ space }}    accessModes: {{ _pvc.accessModes | default(pvc.accessModes) | to_yaml }}
+{{ space }}    resources:
+{{ space }}      requests:
+{{ space }}        storage: ${VOLUME_CAPACITY}
+{%         if 'volumeName' in _pvc or 'volumeName' in pvc %}
+{{ space }}    volumeName: {{ _pvc.volumeName | default(pvc.volumeName) }}
+{%-        endif -%}
+{%- endmacro %}
+
+{% macro volume_definition(_pvc, pvc, indent) -%}
+{% set spacefmt = "%-" + indent + "s" %}
+{% set space = spacefmt | format("",)%}
+{{ space }}- name: vol-${APPLICATION_NAME}
+{{ space }}  PersistentVolumeClaim:
+{{ space }}    claimName: "{{ _pvc.name | default(pvc.name) }}"
+{%- endmacro %}
+
