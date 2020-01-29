@@ -1,0 +1,21 @@
+---
+- name: "Assert OpenShift Login Vars"
+  assert:
+    that:
+      - "ar_osc_common_templates_openshift_login_url is not none"
+    msg: "Must include ar_osc_common_templates_openshift_login_url as the login url for OpenShift and must have an entry for that url in the var 'openshift_login_credentials' containing 'openshift_user' and 'openshift_password'"
+
+- include_vars: "{{ openshift_credentials }}"
+
+- set_fact:
+    openshift: { common: { client_binary: 'oc', admin_binary: 'oc' }}
+    openshift_user: "{{ openshift_login_credentials[ar_osc_common_templates_openshift_login_url]['openshift_user'] }}"
+    openshift_password: "{{ openshift_login_credentials[ar_osc_common_templates_openshift_login_url]['openshift_password'] }}"
+    openshift_login_url: "{{ ar_osc_common_templates_openshift_login_url }}"
+
+- name: Include OpenShift Login role
+  include_role:
+    name: roles/casl-ansible/roles/openshift-login
+
+- debug:
+    msg: "Logged into {{ ar_osc_common_templates_openshift_login_url }}"
