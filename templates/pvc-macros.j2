@@ -4,7 +4,7 @@
 {{ space }}- apiVersion: v1
 {{ space }}  kind: PersistentVolumeClaim
 {{ space }}  metadata:
-{{ space }}    name: {{ _pvc.name | default(pvc.name) }}
+{{ space }}    name: {{ _pvc.name | default(pvc.name) | default('pvc-${APPLICATION_NAME}-${PVC_ENV}') }}
 {{ space }}  spec:
 {%         if 'storageClass' in _pvc or 'storageClass' in pvc %}
 {{ space }}    storageClassName: {{ _pvc.storageClass | default(pvc.accessModes) }}
@@ -23,6 +23,6 @@
 {% set space = spacefmt | format("",)%}
 {{ space }}- name: vol-${APPLICATION_NAME}
 {{ space }}  PersistentVolumeClaim:
-{{ space }}    claimName: "{{ _pvc.name | default(pvc.name) }}"
+{{ space }}    claimName: "{{ _pvc.name | default(pvc.name) | default('pvc-${APPLICATION_NAME}-${PVC_ENV}') }}"
 {%- endmacro %}
 
