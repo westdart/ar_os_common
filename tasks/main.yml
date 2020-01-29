@@ -5,3 +5,11 @@
     dest: "{{ ar_osc_common_templates_dest }}/{{ item | basename }}"
   with_fileglob:
     - "{{ role_path }}/files/*"
+  when: ar_osc_common_templates_selection is not defined
+
+- name: Copy selected templates to desired location
+  copy:
+    src: "{{ item }}"
+    dest: "{{ ar_osc_common_templates_dest }}/{{ item | basename }}"
+  with_items: "{{ ar_osc_common_templates_selection }}"
+  when: ar_osc_common_templates_selection is defined
