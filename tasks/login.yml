@@ -9,9 +9,17 @@
 
 - set_fact:
     openshift: { common: { client_binary: 'oc', admin_binary: 'oc' }}
-    openshift_user: "{{ openshift_login_credentials[ar_osc_common_templates_openshift_login_url]['openshift_user'] }}"
-    openshift_password: "{{ openshift_login_credentials[ar_osc_common_templates_openshift_login_url]['openshift_password'] }}"
+    openshift_user: "{{ ar_osc_common_templates_openshift_username | default(openshift_login_credentials[ar_osc_common_templates_openshift_login_url]['openshift_user']) }}"
+    openshift_password: "{{ ar_osc_common_templates_openshift_password | default(openshift_login_credentials[ar_osc_common_templates_openshift_login_url]['openshift_password']) }}"
     openshift_login_url: "{{ ar_osc_common_templates_openshift_login_url }}"
+
+- debug:
+    msg: "Logging into {{ ar_osc_common_templates_openshift_login_url }} as {{ openshift_user }}/{{ openshift_password }}"
+
+- name: Force login
+  set_fact:
+    openshift_token: ''
+  when: ar_osc_common_templates_openshift_login_force
 
 - name: Include OpenShift Login role
   include_role:

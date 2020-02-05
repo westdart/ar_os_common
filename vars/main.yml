@@ -1,2 +1,14 @@
 ---
 ar_osc_common_templates_openshift_login_url: null
+ar_osc_common_templates_openshift_login_force: false
+# Used if defined:
+# ar_osc_common_templates_openshift_username
+# ar_osc_common_templates_openshift_password
+
+ar_osc_common_templates_registry_secret_name: null
+ar_osc_common_templates_registry_secret_namespace: null
+ar_osc_common_templates_registry_server: null
+ar_osc_common_templates_registry_username: null
+ar_osc_common_templates_registry_password: null
+ar_osc_common_templates_registry_email: null
+
