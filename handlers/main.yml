@@ -1,0 +1,8 @@
+---
+- name: Update CA trust
+  command: update-ca-trust
+
+- name: Restart Docker
+  systemd:
+    name: docker.service
+    state: restarted

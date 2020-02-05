@@ -1,2 +1,6 @@
 ---
 ar_osc_common_templates_dest: ''
+ar_osc_common_templates_docker_version_1_13: '1.13'
+ar_osc_common_templates_update_registry_list: true
+
+ar_osc_common_templates_registry_login_credentials: "{{ registry_login_credentials }}"

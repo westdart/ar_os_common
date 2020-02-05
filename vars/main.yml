@@ -12,3 +12,6 @@ ar_osc_common_templates_registry_username: null
 ar_osc_common_templates_registry_password: null
 ar_osc_common_templates_registry_email: null
 
+ar_osc_common_templates_cert_host: null
+ar_osc_common_templates_cert_port: null
+ar_osc_common_templates_cert_path: null

@@ -1,0 +1,57 @@
+---
+- set_fact:
+    cert_host_ip: "{{ lookup('dig', '{{ ar_osc_common_templates_cert_host }}.')}}"
+
+- debug: var=cert_host_ip
+
+- name: Copy cert file to machines
+  copy:
+    src: "{{ ar_osc_common_templates_cert_path }}"
+    dest: "/etc/pki/ca-trust/source/anchors/"
+  notify:
+    - Update CA trust
+    - Restart Docker
+
+- name: Get info on docker host
+  docker_host_info:
+  register: dockerinfo
+
+- debug: var=dockerinfo
+  when: dockerinfo.host_info.ServerVersion is version_compare(ar_osc_common_templates_docker_version_1_13, '<')
+
+- name: Update Docker Certs - mkdir
+  file:
+    path: "/etc/docker/certs.d/{{ ar_osc_common_templates_item }}"
+    state: directory
+  with_items:
+    - "{{ cert_host_ip }}"
+    - "{{ ar_osc_common_templates_cert_host }}:{{ ar_osc_common_templates_cert_port }}"
+  when: dockerinfo.host_info.ServerVersion is version_compare(ar_osc_common_templates_docker_version_1_13, '<')
+  loop_control:
+    loop_var: ar_osc_common_templates_item
+
+- name: Update Docker Certs - copy cert
+  copy:
+    src: "{{ ar_osc_common_templates_cert_path }}"
+    dest: "/etc/docker/certs.d/{{ ar_osc_common_templates_item }}"
+  with_items:
+    - "{{ cert_host_ip }}"
+    - "{{ ar_osc_common_templates_cert_host }}:{{ ar_osc_common_templates_cert_port }}"
+  when: dockerinfo.host_info.ServerVersion is version_compare(ar_osc_common_templates_docker_version_1_13, '<')
+  loop_control:
+    loop_var: ar_osc_common_templates_item
+  notify:
+    - Restart Docker
+
+- name: Get external registry list
+  set_fact:
+    registry_list: "{{ ar_osc_common_templates_registry_login_credentials | dict2items | map(attribute='key') | map('regex_replace', '^(.*)$', '\"\\1\"') | list | join(',') }}"
+  when: ar_osc_common_templates_update_registry_list
+
+- name: Update /etc/containers/registries.conf
+  template:
+    src: registries.conf.j2
+    dest: /etc/containers/registries.update
+#  notify:
+#    - Restart Docker
+  when: ar_osc_common_templates_update_registry_list

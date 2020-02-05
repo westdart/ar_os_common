@@ -1,0 +1,22 @@
+---
+- name: Obtain host certificate
+  shell: echo -n | openssl s_client -connect {{ ar_osc_common_templates_cert_host }}:{{ ar_osc_common_templates_cert_port }} -servername {{ ar_osc_common_templates_cert_host }} -showcerts 2>/dev/null | sed --quiet '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p'
+  changed_when: false
+  register: certresult
+
+- name: Save the certificate
+  copy:
+    dest: "{{ ar_osc_common_templates_cert_path }}"
+    content: "{{ certresult.stdout }}"
+
+- name: Get information on certificate
+  openssl_certificate_info:
+    path: "{{ ar_osc_common_templates_cert_path }}"
+  register: certinfo
+
+- name: Validate certificate
+  assert:
+    that:
+      - not certinfo.expired
+      - "certinfo.subject.commonName == '{{ ar_osc_common_templates_cert_host }}' or 'DNS:{{ ar_osc_common_templates_cert_host }}' in certinfo.subject_alt_name"
+    msg: "Certificate must not be expired and must contain the hostname accessed in the subject commonName or subject alternate names"
