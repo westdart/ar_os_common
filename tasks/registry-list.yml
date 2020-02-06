@@ -1,0 +1,13 @@
+---
+- name: Get external registry list
+  set_fact:
+    registry_list: "{{ ar_osc_common_templates_registry_list | map('regex_replace', '^(.*)$', '\"\\1\"') | list | join(',') }}"
+  when: ar_osc_common_templates_registry_list is defined and ar_osc_common_templates_registry_list | length > 0
+
+- name: Update /etc/containers/registries.conf
+  template:
+    src: registries.conf.j2
+    dest: /etc/containers/registries.update
+#  notify:
+#    - Restart Docker
+  when: ar_osc_common_templates_registry_list is defined and ar_osc_common_templates_registry_list | length > 0

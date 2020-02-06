@@ -42,16 +42,3 @@
     loop_var: ar_osc_common_templates_item
   notify:
     - Restart Docker
-
-- name: Get external registry list
-  set_fact:
-    registry_list: "{{ ar_osc_common_templates_registry_login_credentials | dict2items | map(attribute='key') | map('regex_replace', '^(.*)$', '\"\\1\"') | list | join(',') }}"
-  when: ar_osc_common_templates_update_registry_list
-
-- name: Update /etc/containers/registries.conf
-  template:
-    src: registries.conf.j2
-    dest: /etc/containers/registries.update
-#  notify:
-#    - Restart Docker
-  when: ar_osc_common_templates_update_registry_list
