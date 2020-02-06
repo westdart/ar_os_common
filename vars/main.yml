@@ -3,6 +3,7 @@
 # ar_os_common_openshift_username
 # ar_os_common_openshift_password
 # ar_os_common_registry_list
+# ar_os_common_registry_operation (default 'pull')
 
 ar_os_common_openshift_login_url: null
 ar_os_common_openshift_token: ''
