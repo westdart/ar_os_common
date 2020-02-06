@@ -1,9 +1,9 @@
 ---
-ar_osc_common_templates_dest: ''
-ar_osc_common_templates_docker_version_1_13: '1.13'
-ar_osc_common_templates_update_registry_list: true
+ar_os_common_dest: ''
+ar_os_common_docker_version_1_13: '1.13'
+ar_os_common_update_registry_list: true
 
-ar_osc_common_templates_openshift_login_credentials: "{{ openshift_login_credentials | default(omit) }}"
+ar_os_common_openshift_login_credentials: "{{ openshift_login_credentials | default(omit) }}"
 # openshift_login_credentials takes the form:
 # openshift_login_credentials:
 #  '<cluster-url>':
