@@ -3,23 +3,37 @@
   assert:
     that:
       - "ar_osc_common_templates_openshift_login_url is not none"
-    msg: "Must include ar_osc_common_templates_openshift_login_url as the login url for OpenShift and must have an entry for that url in the var 'openshift_login_credentials' containing 'openshift_user' and 'openshift_password'"
-
-- include_vars: "{{ openshift_credentials }}"
+    msg: "Must include ar_osc_common_templates_openshift_login_url as the login url for OpenShift and must have an entry for that url in the var 'ar_osc_common_templates_openshift_login_credentials' containing 'openshift_user' and 'openshift_password'"
 
 - set_fact:
     openshift: { common: { client_binary: 'oc', admin_binary: 'oc' }}
     openshift_user: "{{ ar_osc_common_templates_openshift_username | default(openshift_login_credentials[ar_osc_common_templates_openshift_login_url]['openshift_user']) }}"
-    openshift_password: "{{ ar_osc_common_templates_openshift_password | default(openshift_login_credentials[ar_osc_common_templates_openshift_login_url]['openshift_password']) }}"
     openshift_login_url: "{{ ar_osc_common_templates_openshift_login_url }}"
 
-- debug:
-    msg: "Logging into {{ ar_osc_common_templates_openshift_login_url }} as {{ openshift_user }}/{{ openshift_password }}"
+- set_fact:
+    openshift_password: "{{ ar_osc_common_templates_openshift_password }}"
+  when: ar_osc_common_templates_openshift_password is defined and ar_osc_common_templates_openshift_password != ''
 
+- set_fact:
+    openshift_password: "{{ ar_osc_common_templates_openshift_login_credentials[ar_osc_common_templates_openshift_login_url].openshift_password }}"
+  when: (openshift_password is not defined or openshift_password == '') and 'openshift_password' in ar_osc_common_templates_openshift_login_credentials[ar_osc_common_templates_openshift_login_url]
+
+- set_fact:
+    openshift_token: "{{ ar_osc_common_templates_openshift_token }}"
+  when: ar_osc_common_templates_openshift_token is defined and ar_osc_common_templates_openshift_token != ''
+
+- set_fact:
+    openshift_token: "{{ ar_osc_common_templates_openshift_login_credentials[ar_osc_common_templates_openshift_login_url].openshift_token }}"
+  when: (openshift_token is not defined or openshift_token == '') and 'openshift_token' in ar_osc_common_templates_openshift_login_credentials[ar_osc_common_templates_openshift_login_url]
+
+- debug:
+    msg: "Logging into {{ ar_osc_common_templates_openshift_login_url }} as {{ openshift_user }}"
+
+# Vagary of roles/casl-ansible/roles/openshift-login - considering rewriting it
 - name: Force login
   set_fact:
     openshift_token: ''
-  when: ar_osc_common_templates_openshift_login_force
+  when: ar_osc_common_templates_openshift_login_force and openshift_password is defined and openshift_password | trim != ''
 
 - name: Include OpenShift Login role
   include_role:

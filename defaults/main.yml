@@ -3,4 +3,12 @@ ar_osc_common_templates_dest: ''
 ar_osc_common_templates_docker_version_1_13: '1.13'
 ar_osc_common_templates_update_registry_list: true
 
-ar_osc_common_templates_registry_login_credentials: "{{ registry_login_credentials }}"
+ar_osc_common_templates_openshift_login_credentials: "{{ openshift_login_credentials | default(omit) }}"
+# openshift_login_credentials takes the form:
+# openshift_login_credentials:
+#  '<cluster-url>':
+#    openshift_user: '<username>'
+#    openshift_password: '<password>'
+#    openshift_token: '<token>'
+#
+# Either 'openshift_password' or 'openshift_token' should be specified
