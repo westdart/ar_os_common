@@ -12,33 +12,10 @@
     - Update CA trust
     - Restart Docker
 
-- name: Get info on docker host
-  docker_host_info:
-  register: dockerinfo
+- name: Get docker version
+  command: 'docker system info --format \{\{.ServerVersion\}\}'
+  register: dockerversion
+  changed_when: false
 
-- debug: var=dockerinfo
-  when: dockerinfo.host_info.ServerVersion is version_compare(ar_os_common_docker_version_1_13, '<')
-
-- name: Update Docker Certs - mkdir
-  file:
-    path: "/etc/docker/certs.d/{{ ar_os_common_item }}"
-    state: directory
-  with_items:
-    - "{{ cert_host_ip }}"
-    - "{{ ar_os_common_cert_host }}:{{ ar_os_common_cert_port }}"
-  when: dockerinfo.host_info.ServerVersion is version_compare(ar_os_common_docker_version_1_13, '<')
-  loop_control:
-    loop_var: ar_os_common_item
-
-- name: Update Docker Certs - copy cert
-  copy:
-    src: "{{ ar_os_common_cert_path }}"
-    dest: "/etc/docker/certs.d/{{ ar_os_common_item }}"
-  with_items:
-    - "{{ cert_host_ip }}"
-    - "{{ ar_os_common_cert_host }}:{{ ar_os_common_cert_port }}"
-  when: dockerinfo.host_info.ServerVersion is version_compare(ar_os_common_docker_version_1_13, '<')
-  loop_control:
-    loop_var: ar_os_common_item
-  notify:
-    - Restart Docker
+- include_tasks: place-docker-certs
+  when: dockerversion.stdout is version(ar_os_common_docker_version_1_13, '<')

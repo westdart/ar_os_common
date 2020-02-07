@@ -9,14 +9,5 @@
     dest: "{{ ar_os_common_cert_path }}"
     content: "{{ certresult.stdout }}"
 
-- name: Get information on certificate
-  openssl_certificate_info:
-    path: "{{ ar_os_common_cert_path }}"
-  register: certinfo
-
-- name: Validate certificate
-  assert:
-    that:
-      - not certinfo.expired
-      - "certinfo.subject.commonName == '{{ ar_os_common_cert_host }}' or 'DNS:{{ ar_os_common_cert_host }}' in certinfo.subject_alt_name"
-    msg: "Certificate must not be expired and must contain the hostname accessed in the subject commonName or subject alternate names"
+- include_tasks: validate-cert
+  when: ansible_version.full is version('2.8.0', '>=')
