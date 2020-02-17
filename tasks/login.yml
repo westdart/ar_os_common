@@ -5,6 +5,7 @@
       - "ar_os_common_openshift_login_url is not none"
     msg: "Must include ar_os_common_openshift_login_url as the login url for OpenShift and must have an entry for that url in the var 'ar_os_common_openshift_login_credentials' containing 'openshift_user' and 'openshift_password'"
 
+# Set vars for roles/casl-ansible/roles/openshift-login
 - set_fact:
     openshift: { common: { client_binary: 'oc', admin_binary: 'oc' }}
     openshift_user: "{{ ar_os_common_openshift_username | default(openshift_login_credentials[ar_os_common_openshift_login_url]['openshift_user']) }}"
@@ -29,12 +30,27 @@
 - debug:
     msg: "Logging into {{ ar_os_common_openshift_login_url }} as {{ openshift_user }}"
 
-# Vagary of roles/casl-ansible/roles/openshift-login - considering rewriting it
-- name: Force login
+# Obtain currently logged in system
+- shell: oc project | awk -F '"' '{print $(NF-1)}'
+  register: current_host
+  failed_when: false
+  changed_when: false
+
+# Vagary of roles/casl-ansible/roles/openshift-login - have to empty the openshift_token if forcing another login
+# which has to be done when logged into one cluster and requiring logging into another.
+#   Check if the cluster we are logging into is the same as the one already logged into
+- name: Force login when logging into another cluster
+  set_fact:
+    openshift_token: ''
+  when: current_host.rc == 0 and current_host.stdout != ar_os_common_openshift_login_url
+
+#   Check if there is an override to force another login
+- name: Force login override
   set_fact:
     openshift_token: ''
   when: ar_os_common_openshift_login_force and openshift_password is defined and openshift_password | trim != ''
 
+# Do the login
 - name: Include OpenShift Login role
   include_role:
     name: roles/casl-ansible/roles/openshift-login
