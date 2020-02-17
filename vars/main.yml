@@ -10,13 +10,6 @@ ar_os_common_openshift_token: ''
 ar_os_common_openshift_password: ''
 ar_os_common_openshift_login_force: false
 
-ar_os_common_registry_secret_name: null
-ar_os_common_registry_secret_namespace: null
-ar_os_common_registry_server: null
-ar_os_common_registry_username: null
-ar_os_common_registry_password: null
-ar_os_common_registry_email: null
-
 ar_os_common_cert_host: null
 ar_os_common_cert_port: null
 ar_os_common_cert_path: null
