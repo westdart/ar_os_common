@@ -1,9 +1,4 @@
 ---
-- set_fact:
-    cert_host_ip: "{{ lookup('dig', '{{ ar_os_common_cert_host }}.')}}"
-
-- debug: var=cert_host_ip
-
 - name: Copy cert file to machines
   copy:
     src: "{{ ar_os_common_cert_path }}"

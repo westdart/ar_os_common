@@ -1,4 +1,7 @@
 ---
+- set_fact:
+    cert_host_ip: "{{ lookup('dig', '{{ ar_os_common_cert_host }}.')}}"
+
 - name: Update Docker Certs - mkdir
   file:
     path: "/etc/docker/certs.d/{{ ar_os_common_item }}"
