@@ -9,7 +9,8 @@
 {%         if 'storageClass' in _pvc or 'storageClass' in pvc %}
 {{ space }}    storageClassName: {{ _pvc.storageClass | default(pvc.accessModes) }}
 {%         endif %}
-{{ space }}    accessModes: {{ _pvc.accessModes | default(pvc.accessModes) | to_yaml }}
+{{ space }}    accessModes:
+{{ space }}      {{ _pvc.accessModes | default(pvc.accessModes) | to_yaml }}
 {{ space }}    resources:
 {{ space }}      requests:
 {{ space }}        storage: ${VOLUME_CAPACITY}
