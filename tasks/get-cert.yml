@@ -9,5 +9,5 @@
     dest: "{{ ar_os_common_cert_path }}"
     content: "{{ certresult.stdout }}"
 
-- include_tasks: validate-cert
+- include_tasks: validate-cert.yml
   when: ansible_version.full is version('2.8.0', '>=')

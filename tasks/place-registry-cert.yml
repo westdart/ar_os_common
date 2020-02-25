@@ -12,5 +12,5 @@
   register: dockerversion
   changed_when: false
 
-- include_tasks: place-docker-certs
+- include_tasks: place-docker-certs.yml
   when: dockerversion.stdout is version(ar_os_common_docker_version_1_13, '<')
