@@ -5,7 +5,7 @@
       - "ar_os_common_openshift_login_url is not none"
     msg: "Must include ar_os_common_openshift_login_url as the login url for OpenShift and must have an entry for that url in the var 'ar_os_common_openshift_login_credentials' containing 'openshift_user' and 'openshift_password'"
 
-# Set vars for roles/casl-ansible/roles/openshift-login
+# Set vars for casl-ansible/roles/openshift-login
 - name: Set facts for oc command line, openshift_user and openshift_login_url
   set_fact:
     openshift: { common: { client_binary: 'oc', admin_binary: 'oc' }}
@@ -41,7 +41,7 @@
   failed_when: false
   changed_when: false
 
-# Vagary of roles/casl-ansible/roles/openshift-login - have to empty the openshift_token if forcing another login
+# Vagary of casl-ansible/roles/openshift-login - have to empty the openshift_token if forcing another login
 # which has to be done when logged into one cluster and requiring logging into another.
 #   Check if the cluster we are logging into is the same as the one already logged into
 - name: Force login when logging into another cluster
@@ -58,7 +58,7 @@
 # Do the login
 - name: Include OpenShift Login role
   include_role:
-    name: roles/casl-ansible/roles/openshift-login
+    name: casl-ansible/roles/openshift-login
 
 - debug:
     msg: "Logged into {{ ar_os_common_openshift_login_url }}"
