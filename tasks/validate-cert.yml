@@ -1,4 +1,8 @@
 ---
+- name: "Assertions: ar_os_common (validate-cert)"
+  assert:
+    that: "{{ ar_os_common_cert_assertions }}"
+
 - name: Get information on certificate
   openssl_certificate_info:
     path: "{{ ar_os_common_cert_path }}"

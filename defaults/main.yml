@@ -12,3 +12,25 @@ ar_os_common_openshift_login_credentials: "{{ openshift_login_credentials | defa
 #    openshift_token: '<token>'
 #
 # Either 'openshift_password' or 'openshift_token' should be specified
+
+ar_os_common_login_basic_assertions: [
+  "ar_os_common_openshift_login_url is defined",
+  "ar_os_common_openshift_login_url is not none",
+  "ar_os_common_openshift_login_url | length"
+]
+
+ar_os_common_login_secret_map_assertions: [
+  "ar_os_common_openshift_login_url in openshift_login_credentials",
+  "'openshift_user' in openshift_login_credentials[ar_os_common_openshift_login_url]",
+  "'openshift_token' in openshift_login_credentials[ar_os_common_openshift_login_url] or 'openshift_password' in openshift_login_credentials[ar_os_common_openshift_login_url]",
+]
+ar_os_common_login_secret_map_assertions_msg: "Must include ar_os_common_openshift_login_url as the login url for OpenShift and must have an entry for that url in the var 'ar_os_common_openshift_login_credentials' containing 'openshift_user' and either 'openshift_password' or 'openshift_token'"
+
+ar_os_common_cert_assertions: [
+  "ar_os_common_cert_host is not none",
+  "ar_os_common_cert_host | length",
+  "ar_os_common_cert_port is not none",
+  "ar_os_common_cert_port | length",
+  "ar_os_common_cert_path is not none",
+  "ar_os_common_cert_path | length",
+]

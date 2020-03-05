@@ -1,4 +1,8 @@
 ---
+- name: "Assertions: ar_os_common (place-docker-cert)"
+  assert:
+    that: "{{ ar_os_common_cert_assertions }}"
+
 - set_fact:
     cert_host_ip: "{{ lookup('dig', '{{ ar_os_common_cert_host }}.')}}"
 

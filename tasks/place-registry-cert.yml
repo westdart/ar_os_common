@@ -1,4 +1,8 @@
 ---
+- name: "Assertions: ar_os_common (place-registry-cert)"
+  assert:
+    that: "{{ ar_os_common_cert_assertions }}"
+
 - name: Copy cert file to machines
   copy:
     src: "{{ ar_os_common_cert_path }}"

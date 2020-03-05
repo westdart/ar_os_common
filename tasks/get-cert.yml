@@ -1,4 +1,8 @@
 ---
+- name: "Assertions: ar_os_common (get-cert)"
+  assert:
+    that: "{{ ar_os_common_cert_assertions }}"
+
 - name: Obtain host certificate
   shell: echo -n | openssl s_client -connect {{ ar_os_common_cert_host }}:{{ ar_os_common_cert_port }} -servername {{ ar_os_common_cert_host }} -showcerts 2>/dev/null | sed --quiet '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p'
   changed_when: false
