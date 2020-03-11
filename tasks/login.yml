@@ -3,14 +3,14 @@
 - name: Set facts for oc command line, openshift_user and openshift_login_url
   set_fact:
     openshift: { common: { client_binary: 'oc', admin_binary: 'oc' }}
-    openshift_user: "{{ ar_os_common_openshift_username | default(openshift_login_credentials[ar_os_common_openshift_login_url]['openshift_user']) }}"
+    openshift_user: "{{ ar_os_common_openshift_username | default(ar_os_common_openshift_login_credentials[ar_os_common_openshift_login_url]['openshift_user']) }}"
     openshift_login_url: "{{ ar_os_common_openshift_login_url }}"
 
 - name: "Assertions: ar_os_common (login basic assertions)"
   assert:
     that: "{{ ar_os_common_login_basic_assertions }}"
 
-- name: "Assertions: ar_os_common (openshift_login_credentials)"
+- name: "Assertions: ar_os_common (ar_os_common_openshift_login_credentials)"
   assert:
     that: "{{ ar_os_common_login_secret_map_assertions }}"
     msg: "{{ ar_os_common_login_secret_map_assertions_msg }}"
