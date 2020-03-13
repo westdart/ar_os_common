@@ -16,6 +16,11 @@
     msg: "{{ ar_os_common_login_secret_map_assertions_msg }}"
   when: not ar_os_common_openshift_password | length and not ar_os_common_openshift_token | length
 
+- name: "Assertions: Credentials are provided"
+  assert:
+    that: "{{ ar_os_common_login_credential_assertions }}"
+    msg: "{{ ar_os_common_login_secret_map_assertions_msg }}"
+
 - name: Set fact for supplied openshift_password
   set_fact:
     openshift_password: "{{ ar_os_common_openshift_password }}"
@@ -24,7 +29,7 @@
 - name: Set fact for default openshift_password
   set_fact:
     openshift_password: "{{ ar_os_common_openshift_login_credentials[ar_os_common_openshift_login_url].openshift_password }}"
-  when: (openshift_password is not defined or openshift_password == '') and 'openshift_password' in ar_os_common_openshift_login_credentials[ar_os_common_openshift_login_url]
+  when: (not ar_os_common_openshift_password | length) and 'openshift_password' in ar_os_common_openshift_login_credentials[ar_os_common_openshift_login_url]
 
 - name: Set fact for supplied openshift_token
   set_fact:
@@ -34,7 +39,7 @@
 - name: Set fact for default openshift_token
   set_fact:
     openshift_token: "{{ ar_os_common_openshift_login_credentials[ar_os_common_openshift_login_url].openshift_token }}"
-  when: (openshift_token is not defined or openshift_token == '') and 'openshift_token' in ar_os_common_openshift_login_credentials[ar_os_common_openshift_login_url]
+  when: (not ar_os_common_openshift_token | length) and 'openshift_token' in ar_os_common_openshift_login_credentials[ar_os_common_openshift_login_url]
 
 - debug:
     msg: "Logging into {{ ar_os_common_openshift_login_url }} as {{ openshift_user }}"
@@ -58,6 +63,11 @@
   set_fact:
     openshift_token: ''
   when: ar_os_common_openshift_login_force and openshift_password is defined and openshift_password | trim != ''
+
+- name: Favour token over password
+  set_fact:
+    openshift_password: ''
+  when: (openshift_token is defined and openshift_token | length) and (openshift_password is defined and openshift_password | length)
 
 # Do the login
 - name: Include OpenShift Login role

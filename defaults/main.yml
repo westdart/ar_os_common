@@ -26,6 +26,12 @@ ar_os_common_login_secret_map_assertions: [
 ]
 ar_os_common_login_secret_map_assertions_msg: "Must include ar_os_common_openshift_login_url as the login url for OpenShift and must have an entry for that url in the var 'ar_os_common_openshift_login_credentials' containing 'openshift_user' and either 'openshift_password' or 'openshift_token'"
 
+ar_os_common_login_credential_assertions: [
+  "(ar_os_common_openshift_password | length or 'openshift_password' in ar_os_common_openshift_login_credentials[ar_os_common_openshift_login_url]) or (ar_os_common_openshift_token | length or 'openshift_token' in ar_os_common_openshift_login_credentials[ar_os_common_openshift_login_url])",
+  "ar_os_common_openshift_username is not defined or (ar_os_common_openshift_username | length or 'openshift_user' in ar_os_common_openshift_login_credentials[ar_os_common_openshift_login_url])"
+]
+ar_os_common_login_credential_assertions_msg: "Must provide 'ar_os_common_openshift_username' and either supply 'ar_os_common_openshift_password' or 'ar_os_common_openshift_token' or have 'openshift_password' or 'openshift_token' supplied through 'ar_os_common_openshift_login_credentials[ar_os_common_openshift_login_url]'"
+
 ar_os_common_cert_assertions: [
   "ar_os_common_cert_host is not none",
   "ar_os_common_cert_host | length",
