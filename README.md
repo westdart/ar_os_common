@@ -41,12 +41,20 @@ currently logged in cluster (if any) with the required one.
 
 #### Defaults
 
-| Variable                                     | Description                                                              | Default                                                                                                          |
-| --------                                     | -----------                                                              | -------                                                                                                          |
-| ar_os_common_openshift_login_credentials     | Openshift login credentials provided as a map/dict                       | omitted unless 'openshift_login_credentials' is defined                                                          |
-| ar_os_common_login_basic_assertions          | List of assertions made before execution                                 |                                                                                                                  |
-| ar_os_common_login_secret_map_assertions     | Assertions made if map/dict of credentials used                          | Ensures that the login URL is a key in the map and that entry contains a username and either a password or token |
-| ar_os_common_login_secret_map_assertions_msg | Message given on an assertion failure whenn checking credential map/dict | See defaults.yml                                                                                                 |
+| Variable                                     | Description                                                             | Default                                                                                                          |
+| --------                                     | -----------                                                             | -------                                                                                                          |
+| ar_os_common_openshift_login_credentials     | Openshift login credentials provided as a map/dict                      | omitted unless 'openshift_login_credentials' is defined                                                          |
+| ar_os_common_login_basic_assertions          | List of assertions made before execution                                |                                                                                                                  |
+| ar_os_common_login_secret_map_assertions     | Assertions made if map/dict of credentials used                         | Ensures that the login URL is a key in the map and that entry contains a username and either a password or token |
+| ar_os_common_login_secret_map_assertions_msg | Message given on an assertion failure when checking credential map/dict | See defaults.yml                                                                                                 |
+| ar_os_common_login_credential_assertions     | Assertions made on supplied credentials                                 | Ensures that either a password or a token are provided alongside a username                                      |
+| ar_os_common_login_credential_assertions_msg | Message given on an assertion failure when checking credentials         | See defaults.yml                                                                                                 |
+
+#### Secrets
+The following variables should be provided through an encrypted source:
+- ar_os_common_openshift_login_credentials
+- ar_os_common_openshift_token
+- ar_os_common_openshift_password
 
 #### External variables
 The following external variables are used within the role:
